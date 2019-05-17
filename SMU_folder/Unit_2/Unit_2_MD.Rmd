@@ -1,0 +1,73 @@
+---
+title: "Stackloss"
+author: "Fabio"
+date: "5/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+###This is an assigment to practice markdown
+
+ *There are the following conclusion*
+ 
+    *In summary we found the min, 1stQu, median, mean, 3stQu and the max for each columns.
+    *In str we see the number of observations which are the row and the 4 variables.
+    *The scatter plot of stack.loss and Air.Flow correlate in a positive way.
+ *Data*
+ 
+    * The data is from stackloss
+  
+'''{r pressure, echo=FALSE}
+ stackloss
+   Air.Flow Water.Temp Acid.Conc. stack.loss
+1        80         27         89         42
+2        80         27         88         37
+3        75         25         90         37
+4        62         24         87         28
+5        62         22         87         18
+6        62         23         87         18
+7        62         24         93         19
+8        62         24         93         20
+9        58         23         87         15
+10       58         18         80         14
+11       58         18         89         14
+12       58         17         88         13
+13       58         18         82         11
+14       58         19         93         12
+15       50         18         89          8
+16       50         18         86          7
+17       50         19         72          8
+18       50         19         79          8
+19       50         20         80          9
+20       56         20         82         15
+21       70         20         91         15
+> summary(stackloss)
+    Air.Flow       Water.Temp     Acid.Conc.      stack.loss   
+ Min.   :50.00   Min.   :17.0   Min.   :72.00   Min.   : 7.00  
+ 1st Qu.:56.00   1st Qu.:18.0   1st Qu.:82.00   1st Qu.:11.00  
+ Median :58.00   Median :20.0   Median :87.00   Median :15.00  
+ Mean   :60.43   Mean   :21.1   Mean   :86.29   Mean   :17.52  
+ 3rd Qu.:62.00   3rd Qu.:24.0   3rd Qu.:89.00   3rd Qu.:19.00  
+ Max.   :80.00   Max.   :27.0   Max.   :93.00   Max.   :42.00  
+> str(stackloss)
+'data.frame':	21 obs. of  4 variables:
+ $ Air.Flow  : num  80 80 75 62 62 62 62 62 58 58 ...
+ $ Water.Temp: num  27 27 25 24 22 23 24 24 23 18 ...
+ $ Acid.Conc.: num  89 88 90 87 87 87 93 93 87 80 ...
+ $ stack.loss: num  42 37 37 28 18 18 19 20 15 14 ...
+ '''
+ 
+## Plots
+
+'''{r pressure, echo=FALSE}
+x<-stackloss["Air.Flow"]
+y<- stackloss["stack.loss"]
+a <- as.list(x)
+b <- as.list(y)
+scatter.smooth(a$Air.Flow, b$stack.loss)
+
+ ```
+
