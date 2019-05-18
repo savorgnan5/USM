@@ -1,0 +1,100 @@
+---
+title: "Untitled"
+author: "Fabio"
+date: "5/16/2019"
+output: html_document
+---
+**This is Assigment Unit 2 R Markdown Document**
+
+**Reproducuble Research Question**
+
+**1.	A-What is a basic workflow for reproducible research?**
+
+
+  The basic workflow of reproducible research are the following:
+  
+  
+    *Data gathering from raw data, we can use download.file, API-base and others with R;
+    *Analysis with  read.table among others in R, and;
+    *Presentations with Markdown/ HTML, LaTex book, articles and slide presentations.
+
+
+**B-What are five practical tips for making research reproducible?**
+
+
+    *Document everything.
+    *Everything is a text file.
+    *All files should be human readable.
+    *Explicitly tie your file together.
+    *Have a plan to organize, store, and make your files available. 
+
+
+**C-Give an example of how you might implement each tip.**
+	
+    *Document session information in R.
+    *I will keep my files in comma-separated values (.csv).
+    *I will write a comment before a block of code to describe what the code does. 
+    *Use the Kitr commands for tying analysis code into presentations documents including those written in LaTex or Markdown.
+    *I would limit the amount of content that any one file has.
+    
+    
+**D.Which one of these do you think will be the most difficult?**
+	
+	
+  I believe that the third tip, all the files should be human readable would be the most difficult to accomplish.  Because the nature of computer language tent to be no human readable, we need to make a conscious effort to make the best that we can to make it human readable. I believe that in complicated code it can be a challenged task to accomplishe.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+summary(airquality)
+Temperature <- airquality$Temp
+hist(Temperature)
+hist(Temperature,
+     main="Maximum daily temperature at La Guardia Airport",
+     xlab="Temperature in degrees Fahrenheit",
+     xlim=c(50,100),
+     col="darkmagenta",
+     freq=FALSE
+)
+```
+
+## TODO' Plots
+
+
+* 2) A--This is the scatter plot of **Temperature by Month**. You can see an increased 
+ in temperature and then a decreased in temperature again.
+ 
+ 
+* 2) B--This is a scatter plot about **Temperature versus Ozone**. As you can see as temperature go up the ozone goes up.
+
+
+* 3) A--This scatter plot is about **Temperature versus Pressure**. There is not clear
+   pattern or correlation that I can see, but there is a general trend dowm in the pressure when the temperature goes up.
+
+
+* 3) B--This scatter plot is about **Pressure versus Temperature**.There is not clear patter
+    of correlation, but there is a general trend dowm in the pressure when the temperature goes up.
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=TRUE}
+plot(x=airquality$Month, y=airquality$"Temp", xlab="Month", ylab="Temperature", main="Temperature by Month")
+
+
+plot(x=airquality$"Temp", y=airquality$"Ozone", xlab="Temperature", ylab="Ozone", main="Temperature vs Ozone")
+
+
+plot(x=airquality$"Wind", y=airquality$"Temp", xlab="Pressure", ylab="Temp", main="Temperature vs Pressure")
+
+
+plot(x= airquality$"Temp", y= airquality$"Wind", xlab= "Temperature",ylab= "Pressure", main= "Pressure vs Temperature")
+
+```
+
+
+
+
