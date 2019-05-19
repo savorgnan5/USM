@@ -4,7 +4,7 @@ author: "Fabio"
 date: "5/16/2019"
 output: html_document
 ---
-**This is Assigment Unit 2 R Markdown Document**
+##This Assigment is for Unit 2 R Markdown Document##
 
 **Reproducuble Research Question**
 
@@ -67,34 +67,30 @@ hist(Temperature,
 * 2) A--This is the scatter plot of **Temperature by Month**. You can see an increased 
  in temperature and then a decreased in temperature again.
  
- 
-* 2) B--This is a scatter plot about **Temperature versus Ozone**. As you can see as temperature go up the ozone goes up.
-
-
-* 3) A--This scatter plot is about **Temperature versus Pressure**. There is not clear
-   pattern or correlation that I can see, but there is a general trend dowm in the pressure when the temperature goes up.
-
-
-* 3) B--This scatter plot is about **Pressure versus Temperature**.There is not clear patter
-    of correlation, but there is a general trend dowm in the pressure when the temperature goes up.
-
-
-You can also embed plots, for example:
 
 ```{r pressure, echo=TRUE}
 plot(x=airquality$Month, y=airquality$"Temp", xlab="Month", ylab="Temperature", main="Temperature by Month")
 
 
+```
+
+* 2) B--This scatter plot is about **Temperature versus Ozone**. As you can see as temperature go up the ozone goes up.
+
+```{r, echo=TRUE}
 plot(x=airquality$"Temp", y=airquality$"Ozone", xlab="Temperature", ylab="Ozone", main="Temperature vs Ozone")
-
-
-plot(x=airquality$"Wind", y=airquality$"Temp", xlab="Pressure", ylab="Temp", main="Temperature vs Pressure")
-
-
-plot(x= airquality$"Temp", y= airquality$"Wind", xlab= "Temperature",ylab= "Pressure", main= "Pressure vs Temperature")
 
 ```
 
+* 3) A--This scatter plot is about **Temperature versus Pressure**. There is not clear
+   pattern or correlation that I can see, but there is a general trend dowm in the pressure when the temperature goes up.
+   
+```{r, echo=TRUE}
+plot(x=airquality$"Wind", y=airquality$"Temp", xlab="Pressure", ylab="Temp", main="Temperature vs Pressure")
 
+```
 
+* 3) B--This scatter plot is about **Pressure versus Temperature**.There is not clear patter of correlation, but there is a general trend dowm in the pressure when the temperature goes up.
+```{r, echo=TRUE}
+plot(x= airquality$"Temp", y= airquality$"Wind", xlab= "Temperature",ylab= "Pressure", main= "Pressure vs Temperature")
 
+```
