@@ -45,8 +45,10 @@ data(college_recent_grads)
 head(college_recent_grads)
 dfc<-data.frame(college_recent_grads)
 head(dfc)
-#B
+#B The data have 21 variables and 173 observations of college student graduatyes. 
+#It describe demographic, major, major category, employment, types of employments, wages and rank.
 View(college_recent_grads)
+str(college_recent_grads)
 #C
 dim(dfc)
 ##Question 5
