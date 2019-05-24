@@ -1,0 +1,161 @@
+---
+title: "Unit_3"
+author: "Fabio"
+date: "5/24/2019"
+output: html_document
+---
+##Unit_3
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '~')
+```
+
+#Question 1 
+It is cloned in localdrive(the titanic table)
+
+"Desktop/USM/Unit_3/questio_1/awesome-public-datasets/Datasets/titanic.csv"
+
+#Question2
+
+
+*A The table was read and inspected
+
+```{r, echo=TRUE}
+tdf = read.csv("~/Desktop/USM/Unit_3/questio_1/awesome-public-datasets/Datasets/titanic.csv", header = TRUE, sep = ",")
+str(tdf)
+colnames(tdf)
+
+```
+*B The respective count of females and males aboard the Titanic. 
+
+```{r, echo=TRUE}
+plot(tdf$Sex, xlab= "Female", ylab= "Male", main="Sex Distribution in the Titanic" )
+
+```
+
+
+*C Mean Age,Fare, and Survival for the titanic tripulation
+
+
+
+```{r, echo=TRUE}
+#Without the apply function
+meanAge<-mean(tdf$Age, na.rm=TRUE)
+meanAge
+meanFare<-mean(tdf$Fare, na.rm=TRUE)
+meanFare
+# With the apply function
+asf <- tdf[c("Age","Survived","Fare")]
+asf <- na.omit(asf)
+head(asf)
+meanVar<-lapply(asf, mean)
+meanVar
+
+```
+
+
+#Question 3
+*This is the funtion to get information from the sleep study. We look at "MedianAge","MinDuration","MaxDuration","DurationRange", "SelfEsteem","SE_SD 
+
+```{r, echo=TRUE}
+sdf = read.csv("Desktop/USM/Unit_3/sleep_data_01.csv", header=TRUE, sep=",")
+head(sdf)
+SleepDf  <- function(df,x,y,z){
+  median <- median(na.omit(df[,x]))
+  min  <- min(na.omit(df[,y]))
+  max  <- max(na.omit(df[,y]))
+  ranged<-range(na.omit(df[,y]))
+  mean <-mean(na.omit(df[,z]))
+  std  <-sd(na.omit(df[,z] ))
+  report  <- data.frame(median, min, max, ranged, mean, std)
+  colnames(report)<-c("MedianAge","MinDuration","MaxDuration","DurationRange", "SelfEsteem","SE_SD")
+  return(round(report, digits = 2))
+}
+SleepDf(sdf,"Age", "Duration", "RSES")
+
+```
+
+
+#Question 4
+
+
+*A Install the "fivethirtyeight" package 
+
+
+
+*B The data have 21 variables and 173 observations of college student graduatyes.It describe demographic, major, major category, employment, types of employments, wages and rank.
+
+
+
+```{r, echo=TRUE}
+library(fivethirtyeight)
+data(package = "fivethirtyeight")
+vignette("fivethirtyeight", package = "fivethirtyeight")
+data(college_recent_grads)
+head(college_recent_grads)
+dfc<-data.frame(college_recent_grads)
+head(dfc)
+
+```
+
+
+
+```{r, echo=TRUE}
+str(college_recent_grads)
+
+```
+
+
+*C Inspect the dataframe.
+
+
+```{r, echo=TRUE}
+dim(dfc)
+
+```
+#Question 5
+
+*A Inspect the data frame about college graduate
+
+
+```{r, echo=TRUE}
+colnames(dfc)
+length(colnames(dfc))
+
+```
+
+*B Unique major_category in the data frame about college graduate
+
+```{r, echo=TRUE}
+unique(dfc$major_category)
+MajorCount<- aggregate(data.frame(count = dfc$major_category), list(value = dfc$major_category), length)
+MajorCount
+```
+
+
+
+*C Plot about the Major Category for colleges graduates
+
+
+
+```{r , echo= TRUE}
+par(las=2) 
+barplot(height = MajorCount$count, width = 1, space = NULL, names.arg = MajorCount$value,
+        main = "Major Category for Recent Colleges Graduates", xlab = "Value", legend.text = "Categoty", 
+        col = "darkmagenta", axes = TRUE, horiz = TRUE, srt=60, las= 2)
+```
+
+
+
+*D Print the "fivethirtyeight" to a csv
+
+
+
+```{r, echo=TRUE}
+write.csv(dfc, file = "Datafive.csv",row.names=FALSE)
+
+```
+#Question 6
+
+https://github.com/savorgnan5/USM.git
