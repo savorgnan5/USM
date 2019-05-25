@@ -65,6 +65,12 @@ barplot(height = MajorCount$count, width = 1, space = NULL, names.arg = MajorCou
         main = "Major Category for Recent Colleges Graduates", xlab = "Value", legend.text = "Categoty", 
         col = "darkmagenta", axes = TRUE, horiz = TRUE, srt=60, las= 2)
 #D Write CSV in R
-Datafive<-write.csv(dfc, file = "Datafive.csv",row.names=FALSE)
-Datafive
+write.csv(dfc, file = "Datafive.csv",row.names=FALSE)
+
+
+#Question 6
+
+# https://github.com/savorgnan5/USM.git
+
+
 
