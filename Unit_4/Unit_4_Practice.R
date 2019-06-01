@@ -74,7 +74,6 @@ grepl("covered",bfasts$description)
 hp<-read_html("https://www.w3schools.com/xml/simple.xml")
 hp_priceR <- html_nodes(hp,"price")
 hp_descR <- html_nodes(hp,"description")
-hp_nameR
 hp_name = stri_sub(hp_nameR,7,-8)
 hp_name
 hp_price = stri_sub(hp_priceR,8,-9)
