@@ -103,3 +103,10 @@ hp_councildistrict2 <- html_nodes(hp,"councildistrict")
 restByDist = hist(as.numeric(councildistrict))
 barplot(height = restByDist$counts, names = (as.character(seq(1,13,1))),xlab = "Council District",ylab = "Number of Restaurants")
 barplot(height = restByDist$counts, names = (as.character(seq(1,13,1))),xlab = "Council District",ylab = "Number of Restaurants", horiz = TRUE)
+install.packages("nycflights13")
+
+library(nycflights13)
+weather
+airlines
+weather
+

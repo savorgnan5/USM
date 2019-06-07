@@ -1,0 +1,143 @@
+---
+title: "Unit_5_Codebook"
+author: "Fabio"
+date: "6/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+There are two raw data sets used in this assignment, yob2016.txt and yob2015.txt. These list popular names in their respective years, 2015 and 2016, and define the gender the name is assigned to, and how many times that name was chosen. In each of these there are three nameless variables are contained:
+* First name 
+    * The first name is the first name chosen for a child
+* Gender
+    * Gender is either "M" for male or "F" for female
+* Count
+    * Count is the number of times that name was selected
+
+### Data cleaning
+
+### Cleaning of yob2016.txt
+
+To clean the yob2016.txt (year of birth 2016), first it is importad as a dataframe, **data**, which contains three variables:
+* Name
+    * The first name chosen
+* Gender
+    * Gender is either "M" for male or "F" for female
+* Number of Children
+    * Number of Children is the number of times that name is selected
+
+
+The code used for this is :
+
+
+```{r }
+url<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%205/yob2016.txt"
+data <- read.csv(url(url), sep = ";", header = F)
+head(data)
+
+```
+The summary and structure of **data** are displayed in order to verify what is contained within the file,
+
+and to make sure there is nothing crazy happening.
+
+We cleaned the data, to make more human readable adding the column "Name", "Gender", "Number of Children". 
+
+We used the following code:
+
+```{r }
+class(data)
+colnames(data)<- c("Name", "Gender", "Number of Children")
+head(data)
+summary(data)
+str(data)
+```
+
+Next, to remove the mispelled names from **data** and turn it into a useful dataset, **y2016**.
+
+Note the **structure of y2016 is exactly the same as the structure of data**.
+
+We colled finalData the cleaaned data, we used the following code: 
+
+```{r }
+ms<-grep(".*yyy.*", data$Name)
+ms
+data<-data[-ms,]
+data
+finalData<- data
+head(finalData)
+```
+
+### Cleaning of yob2015.txt
+
+To clean the yob2015.txt (year of birth 2015), it is importad as a dataframe, **y2016**, which contains three variables:
+* Name
+    * The first name chosen
+* Gender
+    * Gender is either "M" for male or "F" for female
+* Number of Children
+    * Number of Children is the number of times that name is selected
+The following code is employed:
+
+
+```{r }
+url1<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%205/yob2015.txt"
+data1 <- read.csv(url(url1), sep = ",", header = F)
+head(data1)
+```
+In this case, we looked at the tail of **yob2015**, just to see if anything interesting was happening there.
+
+## Merging y2015 and y2016
+
+y2015 and y2016 were merged into **FinalFinal**, which contains the following structure:
+* Name
+    * The first name chosen
+* Gender
+    * Gender is either "M" for male or "F" for female
+* Numer of Children2015
+    * Number of Children2015 is the number of times that name was selected in 2015
+* Number of Children2016
+    * Number of Children2016 is the number of times that name was selected in 2016
+* Total
+    * Total is the total number of times that name was selected, in both years
+The following code was used to do this:
+
+
+```{r }
+class(data1)
+colnames(data1)<- c("Name", "Gender"," Number of Children") 
+tail(data1, 10)
+final<- merge(data, data1, by ="Name" )
+head(final)
+final[, "Gender.x"]<-NULL
+names(final)<- c("Name", "Number of Children 2016", "Gender", "Number of Children 2015")
+head(final)
+is.na(final)
+final<- na.omit(final)
+head(final)
+final %>% mutate(Total = `Number of Children 2016` + `Number of Children 2015`) -> FinalFinal
+head(FinalFinal)
+class(FinalFinal)
+```
+## Top 10 names.csv
+
+**Top 10 names.csv** contains two variables: *Name*, the first name chosen, and *Total*, the total number of times it was chosen in the year 2015 and 2016. 
+
+This was produced using the following R code:
+
+
+```{r }
+FinalFinal %>% arrange(desc(Total))-> FinalFinal
+head(FinalFinal)
+#Filter the data only by female, eliminate male.
+FinalFinal %>% filter(Gender == 'F') %>% arrange(desc(Total)) -> FinalFinal
+head(FinalFinal)
+#Getting the top ten females names, clean it and write in a csv file.
+top_names<- top_n(FinalFinal, 10, Total)
+top_names[,"Number of Children 2016" ]<-NULL
+top_names[,"Number of Children 2015" ]<-NULL
+top_names[,"Gender"]<-NULL
+top_names
+write.csv(top_names, file = "Top 10 names")
+```
