@@ -23,6 +23,7 @@ head(ao, 10)
 ao$countrynumber<- as.integer(ao$countrynumber)
 str(ao)
 fslines<-which(ao$country == "Food supply quantity (tonnes) (tonnes)")
+fslines
 ao<-ao[(-1 * fslines),]
 str(ao)
 ao$year<-2009
