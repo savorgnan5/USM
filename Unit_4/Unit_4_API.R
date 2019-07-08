@@ -49,12 +49,12 @@ maxPages <- round((initialQuery$response$meta$hits[1] / 10)-1)
 
 pages <- list()
 for(i in 0:maxPages){
-  nytSearch <- jsonlite::fromJSON(paste0(baseurl, "&page=", i), flatten = TRUE) %>% data.frame() 
+  nytSearch <- jsonlite::fromJSON(paste(baseurl, "&page=", i), flatten = TRUE) %>% data.frame() 
   message("Retrieving page ", i)
   pages[[i+1]] <- nytSearch 
   Sys.sleep(1) 
 }
-
+pages
 
 allNYTSearch <- rbind_pages(pages)
 

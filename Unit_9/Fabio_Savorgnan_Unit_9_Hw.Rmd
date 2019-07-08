@@ -1,0 +1,306 @@
+---
+title: "Assignment for Unit 9"
+author: "Fabio"
+date: "7/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Dependencies
+
+###This are the libraries that we will be using in this project.
+
+
+```{r, message=F, warning = F, echo=TRUE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(tidyverse)
+library(stringr)
+```
+#Question A
+
+### We are loading the dataset from the beers and the dataset from the Breweries.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+url<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%207/Beers.csv"
+beers <- read.csv(url(url), sep = ",", header = TRUE)
+head(beers) 
+url<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%207/Breweries.csv"
+brew <- read.csv(url(url), sep = ",", header = TRUE)
+head(brew) 
+```
+
+### We clean the data.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+# changing from factor to char
+brew$State <- as.character(brew$State)
+# changing to int
+brew$Brew_ID <- as.integer(brew$Brew_ID)
+# changing to char
+brew$Name <-  as.character(brew$Name)
+# removing trailing whitespace with str_trim
+str_trim(brew$State, side = "left") -> brew$State
+# Cleaning to combine bataset
+beers$Brew_ID<-beers$Brewery_id
+beers$Brewery_id<-NULL
+head(beers)
+head(brew)
+```
+
+### We combined the 2 tadaset.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+combined<- merge(brew, beers, by = "Brew_ID")
+# renaming Name.x to Brewery_Name
+colnames(combined)[2] <- "Brewery_Name"
+# renaming Name.y to Beer_Name
+colnames(combined)[5] <- "Beer_Name"
+head(combined)
+```
+
+### Create one new dataset for Colorado and Texas.
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State %in% c("TX","CO"))%>% arrange(IBU) ->beerCOTX
+head(beerCOTX)
+```
+
+# Question B
+
+### We plot the relationship between ABV and IBU in Texas and Colorado 
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+p1= ggplot(beerCOTX, aes(x=IBU, y=ABV) )
+p2= p1+ geom_point() 
+p3= p2 + facet_wrap(State ~ .)
+p3
+```
+
+### We plot the relationship between ABV and IBU in Texas and Colorado,in a different way.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+g1= ggplot(beerCOTX, aes(x=ABV, y=IBU) )
+g2= g1+ geom_point() 
+g3= g2 + facet_wrap(State ~ .)
+g3
+```
+Question C
+
+### We plot the relationship between ABV and IBU for the state of Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State=="TX") ->beerTX
+head(beerTX)
+plot(beerTX$ABV ~ beerTX$IBU, main= "ABV Vs IBU in Texas", xlab = "IBU", ylab = "ABV")
+tx_lmt <- lm(beerTX$ABV ~ beerTX$IBU)
+summary(tx_lmt)
+abline(tx_lmt)
+```
+
+### We plot the relationship between ABV and IBU for the state of Colorado
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State=="CO") ->beerCO
+head(beerCO)
+plot(beerCO$ABV ~ beerCO$IBU, main= "ABV Vs IBU in Colorado", xlab = "IBU", ylab = "ABV")
+co_lmc <- lm(beerCO$ABV ~ beerCO$IBU)
+summary(co_lmc)
+abline(co_lmc)
+```
+
+
+### Addressing the assumption for Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+hist(tx_lmt$resid)
+plot(tx_lmt, which=1)
+plot(tx_lmt, which=2)
+```
+
+* 1-Subpopulation of ABV for a fixed IBU are not normally distributed for the state of Texas. Could be corrected with the removal of outlier in the higher end though, please refer to the histogram. The variation in the distribution of ABV is not the same, please refer to Residual Vs Fitted, different variation of the ABV across the plot.
+
+* 2-The means of the distributions of ABV are linearly related to IBU.P value =  <2e-16.
+
+* 3-We can not assume that the mean and variation of the mean from the ABV are normaly distributed. Please refer to 
+ Residual Vs Fitted.
+
+* 4-ABV and IBU are independent from one another.(No multicollinearity). Observations are independent of one another. Assuming in base of the knowledge in the colection of the data.
+
+
+### Addressing the assumption for Colorado
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+hist(co_lmc$resid)
+plot(co_lmc, which=1)
+plot(co_lmc, which=2)
+```
+
+
+* 1-Subpopulation of ABV for a fixed IBU are not normally distributed in the state of Colorado. Plese see histogram. Also the data is concentrated in the lower part of the plot Residual VS Fitted. The variation in the distribution of ABV is not the same, please refer to Residual Vs Fitted, different variation of the ABV across the plot.
+
+* 2-The means of the distributions of ABV are linearly related to IBU.P value =  <2e-16.
+
+* 3-We can not assume that the mean and variation of the mean from the ABV are normaly distributed.Please refer to 
+ Residual Vs Fitted.
+
+* 4-ABV and IBU are independent from one another.(No multicollinearity). Observations are independent of one another. Assuming in base of the knowledge in the colection of the data
+
+
+# Questio D1
+
+### Interpretation of the Slope for Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+summary(tx_lmt)
+```
+
+* Interpretation of the slope = For IBU in the state of Texas, for every increment in IBU, there is increasement in ABV by 4.172e-04*IBU.
+
+* Interpretation of the intercept = When IBU is 0 in the state of Texas the ABV is 4.3473e-02
+
+
+
+### Interpretation of the Slope for Colorado
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+summary(co_lmc)
+```
+
+* nterpretation of the slope = For IBU in the state of Colorado, for every increment in IBU, there is increasement in ABV by 3.676e-04*IBU.
+
+* Interpretation of the intercept = When IBU is 0 in the state of Colorado the ABV is 4.740e-02
+
+* There is evidence that the relationship of ABV and IBU is stronger in the state of Texas. The slope in the state of Texas is higher 4.172e-04 versus 3.676e-04 in the state of Colorado 
+
+### Interpretation of the confident interval
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+confint(tx_lmt)
+```
+
+* For IBU in the state of Texas, for every increment in IBU, we will see increasement in the ABV by
+ 4.172e-04xIBU. We are 95% confident that this increment in ABV will be between (0.000344007 - 0.0004903987)xUBU 
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+confint(co_lmc)
+```
+
+* For IBU in the state of Colorado, for every increment in IBU, we will see increasement in the ABV by 3.676e-04xUBU
+ We are 95% confident that this increment in ABV will be between (0.000299726 - 0.0004354124)xUBU 
+ 
+* In base of the plausible values of the intercept and the slope from Colorado and Texas,given by the confident interval, we dont have enough evidence that Texas and colorado have a different relationship.
+
+
+# Question E
+
+### Set the train and the test data from the Colorado and Texas dataframe
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+df1<- mutate(beerCOTX, IBU2= IBU^2)
+head(df1)
+## 60% and 40% of the sample size
+smp_size <- floor(0.60 * nrow(df1))
+## set the seed to make your partition reproducible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(df1)), size = smp_size)
+train <- df1[train_ind, ]
+head(train)
+test <- df1[-train_ind, ]
+head(test)
+```
+
+### Training data
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(train) %>% filter(State=="TX") -> dftt
+head(dftt)
+na.omit(train) %>% filter(State=="CO") -> dftc
+```
+
+
+### Test data
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(test) %>% filter(State=="TX") -> dftet
+head(dftet)
+na.omit(test) %>% filter(State=="CO") -> dftec
+head(dftec)
+```
+
+### Model 1 Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+texas <- lm(dftt$ABV ~dftt$IBU) # We predict ABV in base of number given by IBU
+summary(texas)
+# prediction 1
+predict1 <- predict.lm(texas, dftet)
+head(predict1)
+```
+
+### Calculate ASE of model 1 Texas
+
+```{r, echo=TRUE}
+ASA1 <- mean((predict1-dftet$ABV)^2)
+ASA1
+```
+
+### Model 2 Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+texas2 <- lm( dftt$ABV ~ dftt$IBU + dftt$IBU2 , data  = dftt)
+summary(texas2)
+predict2 <- predict.lm(texas2, dftet)
+head(predict2)
+```
+
+
+### Calculate ASE of model 2 Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+ASA2 <-mean((predict2-dftet$ABV)^2)
+ASA2
+```
+
+
+### Model 1 Colorado
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+colorado <- lm(dftc$ABV ~dftc$IBU) # We predict ABV in base of number given by IBU
+summary(colorado)
+# prediction 1
+predict3 <- predict.lm(colorado, dftec)
+head(predict3)
+```
+
+### Calculate ASE of model 1 Colorado
+
+```{r, echo=TRUE}
+ASA3<- mean((predict3-dftec$ABV)^2)
+ASA3
+```
+
+### Model 2 Colorado
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+colorado2 <- lm( dftc$ABV ~ dftc$IBU + dftc$IBU2 , data  = dftc)
+summary(colorado2)
+predict4 <- predict.lm(colorado2, dftec)
+head(predict4)
+```
+
+### Calculate ASE for model 2 Colorado
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+ASA4<- mean((predict4-dftec$ABV)^2)
+ASA4
+```
+
+### Given all the values of ASE, I conclude that none of the models are much better than each other. The model 1 for colorado seen to be the best by 0.00000088.
+

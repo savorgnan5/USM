@@ -3,6 +3,7 @@
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(reshape2)
 
 
 ## We are loading the dataset from the beers and the dataset from breweries in the chunk code below.
@@ -80,3 +81,33 @@ p1= ggplot(dat= plot1, aes(x= Alcohol_content, y= Bitterness))
 p2= p1 +geom_point(shape=1) + geom_smooth(method = "lm") 
 p3= p2 + ggtitle("Bitterness per Alcohol Content")  
 p3
+## Just trying ( this code now does not work though)
+## In the following code we find the most frequent beers style and name by state in the Us territory. NameState is the most 
+## frequent beer name by state in the US territory.NameStyle is the most frequent beer name per state in the  US territory. 
+
+NameStyle<- dcast(combined, State + Name.x ~Style, value.var= sum)
+dcast(combined, Style ~ State, value.var= sum) %>% View
+
+#combined$Name.x<- as.vector(combined$Name)
+#combined$Style<- as.vector(combined$Style)
+#combined %>% group_by(State, Style) %>% dplyr::summarize(Stile = n_distinct(Style),
+                                                         #Name = n_distinct(Name.x)) %>% arrange(desc(Name.x)) -> NS
+#NS
+combined %>% group_by(State) %>% count(Style) %>% top_n(1) %>% arrange(desc(n))
+combined %>% group_by(State) %>% count(Name.y) %>% top_n(1) %>% arrange(desc(n))
+
+combined %>% group_by(State) %>% count(Style) %>% top_n(1) %>% arrange(desc(n)) %>% show_query()
+
+x <-select(combined, State, Style)
+x
+combined %>% select(State, Style) %>% filter(State == "CA")
+combined %>% select(State, Style) %>% filter(State %in% c("CA","CO"))
+
+combined  %>% filter(State %in% c("CA","CO"))
+combined %>% filter(State %in% c("CA","CO"))
+
+combined %>% select(State, Style) %>%filter(State %in% c("CA","CO"))
+combined %>% filter(State %in% c("CA","CO"))
+
+#https://www-bcf.usc.edu/~gareth/ISL/ISLR%20Seventh%20Printing.pdf   Chapter 3.1, 3.2 read for machine learning
+
