@@ -252,6 +252,8 @@ surface_plot
 
 ###Plot of assumptions being met for MLR in 3D. and Curse of Dimensionality
 ```{r}
+library(plotly)
+library(tidyverse)
 #Explanatory Variables
 axis_x <- seq(1,10, by = 1)
 axis_y <- seq(1,10, by = 1)

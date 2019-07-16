@@ -252,30 +252,7 @@ brew$Name &lt;-  as.character(brew$Name)
 str_trim(brew$State, side = &quot;left&quot;) -&gt; brew$State
 # Cleaning to combine bataset
 beers$Brew_ID&lt;-beers$Brewery_id
-beers$Brewery_id&lt;-NULL
-head(beers)</code></pre>
-<pre><code>##                  Name Beer_ID   ABV IBU                          Style
-## 1            Pub Beer    1436 0.050  NA            American Pale Lager
-## 2         Devil's Cup    2265 0.066  NA        American Pale Ale (APA)
-## 3 Rise of the Phoenix    2264 0.071  NA                   American IPA
-## 4            Sinister    2263 0.090  NA American Double / Imperial IPA
-## 5       Sex and Candy    2262 0.075  NA                   American IPA
-## 6        Black Exodus    2261 0.077  NA                  Oatmeal Stout
-##   Ounces Brew_ID
-## 1     12     409
-## 2     12     178
-## 3     12     178
-## 4     12     178
-## 5     12     178
-## 6     12     178</code></pre>
-<pre class="r"><code>head(brew)</code></pre>
-<pre><code>##   Brew_ID                      Name          City State
-## 1       1        NorthGate Brewing    Minneapolis    MN
-## 2       2 Against the Grain Brewery    Louisville    KY
-## 3       3  Jack's Abby Craft Lagers    Framingham    MA
-## 4       4 Mike Hess Brewing Company     San Diego    CA
-## 5       5   Fort Point Beer Company San Francisco    CA
-## 6       6     COAST Brewing Company    Charleston    SC</code></pre>
+beers$Brewery_id&lt;-NULL</code></pre>
 </div>
 <div id="we-combined-the-2-tadaset." class="section level3">
 <h3>We combined the 2 tadaset.</h3>

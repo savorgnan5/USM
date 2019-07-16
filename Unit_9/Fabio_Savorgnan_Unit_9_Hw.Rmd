@@ -49,8 +49,7 @@ str_trim(brew$State, side = "left") -> brew$State
 # Cleaning to combine bataset
 beers$Brew_ID<-beers$Brewery_id
 beers$Brewery_id<-NULL
-head(beers)
-head(brew)
+
 ```
 
 ### We combined the 2 tadaset.

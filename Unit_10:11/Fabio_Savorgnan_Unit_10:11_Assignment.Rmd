@@ -1,0 +1,223 @@
+---
+title: "Fabio Savorgnan Unit 10/11 Assignment"
+author: "Fabio"
+date: "7/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Dependencies
+
+###This are the libraries that we will be using in this project.
+
+```{r, message=F, warning = F, echo=TRUE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(tidyverse)
+library(stringr)
+library(caret)
+library(SDMTools)
+```
+
+
+### We are loading the dataset from the beers and the dataset from the Breweries.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+url<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%207/Beers.csv"
+beers <- read.csv(url(url), sep = ",", header = TRUE)
+head(beers) 
+url<-"https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/Unit%207/Breweries.csv"
+brew <- read.csv(url(url), sep = ",", header = TRUE)
+head(brew) 
+```
+
+### We clean the data.
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+# changing from factor to char
+brew$State <- as.character(brew$State)
+# changing to int
+brew$Brew_ID <- as.integer(brew$Brew_ID)
+# changing to char
+brew$Name <-  as.character(brew$Name)
+# removing trailing whitespace with str_trim
+str_trim(brew$State, side = "left") -> brew$State
+# Cleaning to combine bataset
+beers$Brew_ID<-beers$Brewery_id
+beers$Brewery_id<-NULL
+
+```
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+combined<- merge(brew, beers, by = "Brew_ID")
+# renaming Name.x to Brewery_Name
+colnames(combined)[2] <- "Brewery_Name"
+# renaming Name.y to Beer_Name
+colnames(combined)[5] <- "Beer_Name"
+head(combined)
+```
+
+
+### Create one new dataset for Colorado and Texas.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State %in% c("TX","CO"))%>% arrange(IBU) ->beerCOTX
+head(beerCOTX)
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State %in% c("TX"))%>% arrange(IBU) ->beerTX
+head(beerTX)
+## 60% and 40% of the sample size
+smp_size <- floor(0.60 * nrow(beerTX))
+## set the seed to make your partition reproducible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(beerTX)), size = smp_size)
+trainTX <- beerTX[train_ind, ]
+head(trainTX)
+testTX <- beerTX[-train_ind, ]
+head(testTX)
+
+```
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+summary(trainTX)
+
+summary(testTX)
+
+```
+
+
+### Model 1 KNN
+
+```{r, message=F, echo=TRUE}
+trainTX$ABV<- as.matrix(trainTX$ABV)
+fit<- knnreg(x = trainTX$ABV, y = trainTX$IBU, K = 3)
+fit
+predictTX1<- predict(fit, testTX$ABV)
+predictTX1
+```
+
+### Model 2 KNN
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+trainTX$ABV<- as.matrix(trainTX$ABV)
+fit<- knnreg(x = trainTX$ABV, y = trainTX$IBU, K = 5)
+fit
+predictTX2<- predict(fit, testTX$ABV)
+predictTX2
+```
+
+### ASE for model 1 and 2. This 2 model are the same because the ASE1 and ASE2 are the same number. ASE is the difference between the predicted value and the value to be predicted from.
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+ASE1 <-mean((predictTX1-trainTX$ABV)^2)
+ASE1
+ASE2 <-mean((predictTX1-trainTX$ABV)^2)
+ASE2
+```
+
+### The model from the last week is better than this model becaise the model from last weeke, plese see below, the value from the ASE is lower in ASEC which is the linear regrsion model from last week in comparison to the ASE1 and ASE2 whic are the KNN model from this week.
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+texas <- lm(trainTX$ABV ~trainTX$IBU) 
+summary(texas)
+# prediction 1
+predictl <- predict.lm(texas, testTX)
+head(predictl)
+ASEc <- mean((predictl-testTX$ABV)^2)
+ASEc
+```
+
+### Predict ABV in based of the following IBU 150, 170, 190 
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+test<-c(150, 170, 190)
+fit<- knnreg(x = trainTX$ABV, y = trainTX$IBU  , K = 3)
+fit
+predictn<- predict(fit, test)
+predictn
+```
+
+
+### New dataset with Style of the beer in Texas
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+na.omit(combined) %>% filter(State %in% c("TX"))%>% arrange(IBU) ->beerSTX
+beerSTX  %>% filter(Style %in% c("American IPA", "American Pale Ale (APA)"))%>% arrange(IBU)-> beerSTX 
+beerSTX 
+```
+
+### Divide this filtered data set into a training and test set (60/40, training / test split).  
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+## 60% and 40% of the sample size
+smp_size <- floor(0.60 * nrow(beerSTX))
+## set the seed to make your partition reproducible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(beerSTX)), size = smp_size)
+trainSTX <- beerSTX[train_ind, ]
+head(trainSTX)
+testSTX <- beerSTX[-train_ind, ]
+head(testSTX)
+
+```
+
+
+### Model 1 predicting style in base of ABV and IBU
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+trainSTX$Style  <- as.character(trainSTX$Style)
+testSTX$Style <- as.character(testSTX$Style)
+results = class::knn(trainSTX[,c(7,8)], testSTX[,c(7,8)], trainSTX$Style, k = 3)
+results
+conf<- table(testSTX$Style, results)
+caret::confusionMatrix(conf)
+```
+
+
+### Model 2 predicting style in base of ABV and IBU.
+
+### This to model are very similar
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+trainSTX$Style  <- as.character(trainSTX$Style)
+testSTX$Style <- as.character(testSTX$Style)
+results = class::knn(trainSTX[,c(7,8)], testSTX[,c(7,8)], trainSTX$Style, k = 5)
+results
+conf<- table(testSTX$Style, results)
+caret::confusionMatrix(conf)
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+
+```
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+
+```
+
+
+```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
+
+```
+
+
+
+
+
