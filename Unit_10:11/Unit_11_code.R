@@ -86,8 +86,8 @@ Pnews_word = function(key_word, trainingSet, alphaLaplace = 1, betaLaplace = 1) 
 }
 theScoreHolderNews = c()
 theScoreHolderOther = c()
-articleScoreNews = 0;
-articleScoreOther = 0;
+articleScoreNews = 1;
+articleScoreOther = 1;
 for (i in 1 : dim(allNYTSearchTest)[1])  #This loop iterates over the articles in the Test Set
 {
   
@@ -105,7 +105,7 @@ for (i in 1 : dim(allNYTSearchTest)[1])  #This loop iterates over the articles i
   #importantWords
   for(j in 1 : length(importantWords))  #This loop iterates over the important words in the headline
   {
-    articleScoreNews = articleScoreNews * Pnews_word(importantWords[j],allNYTSearchTrain)
+    articleScoreNews = articleScoreNews * Pnews_word(importantWords[1],allNYTSearchTrain)
     articleScoreOther = articleScoreOther * (1 - Pnews_word(importantWords[j],allNYTSearchTrain))
   }
   theScoreHolderNews[i] = articleScoreNews

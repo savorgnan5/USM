@@ -35,7 +35,7 @@ brew <- read.csv(url(url), sep = ",", header = TRUE)
 head(brew) 
 ```
 
-### We clean the data.
+### We clean the data and combined the two dataset.
 ```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
 # changing from factor to char
 brew$State <- as.character(brew$State)
@@ -62,7 +62,7 @@ head(combined)
 ```
 
 
-### Create one new dataset for Colorado and Texas.
+### Create one new dataset for Colorado and Texas. And create a traning set and a test set only for Texas.
 
 ```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
 na.omit(combined) %>% filter(State %in% c("TX","CO"))%>% arrange(IBU) ->beerCOTX
@@ -86,7 +86,7 @@ head(testTX)
 
 ```
 
-
+### Summary of the train and test 
 ```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
 summary(trainTX)
 
@@ -185,7 +185,7 @@ caret::confusionMatrix(conf)
 
 ### Model 2 predicting style in base of ABV and IBU.
 
-### This to model are very similar. There is not difference between the 2, I will take the first model because it is simpler.
+### This two model are very similar. There is not difference between the two, I will take the first model because it is simpler.
 ```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
 trainSTX$Style  <- as.character(trainSTX$Style)
 testSTX$Style <- as.character(testSTX$Style)
@@ -211,7 +211,7 @@ library(tidyverse)
 ### NYT API and get data
 
 ```{r, message=F, warning = F, echo=TRUE, echo=TRUE}
-NYTIMES_KEY = "OG89fUubcS8FXofVrLA4dmIOHh5omiFa" #Your Key Here … get from NTY API website
+NYTIMES_KEY = "ULAGIigdFMCFsmJgB5cxcwKmCjnISU6W" #Your Key Here … get from NTY API website
 # Let's set some parameters
 term <- "Central+Park+Jogger" # Need to use + to string together separate words
 begin_date <- "19890419"

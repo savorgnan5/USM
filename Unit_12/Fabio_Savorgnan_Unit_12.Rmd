@@ -1,0 +1,116 @@
+---
+title: "Unit_12"
+author: "Fabio"
+date: "7/23/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(tidyverse)
+library(stringr)
+library(caret)
+library(fpp)
+library(fpp2)
+```
+
+#### EuStockMarkets. Pull the DAX index
+
+```{r, message=F, warning = F, echo=TRUE}
+tsData <- EuStockMarkets
+daxind <- tsData[,1]
+daxind
+
+```
+
+### Rudimentary Plot
+
+```{r, message=F, warning = F, echo=TRUE}
+plot(daxind, main="German Daily Closing Prices",xlab="Year", ylab="Closing Prices", col = "blue") +
+  abline(v = 1997, col = "red", lty = 1, lwd = 2)
+```
+### Decompose the times series into its components
+
+```{r, message=F, warning = F, echo=TRUE}
+tsData <- EuStockMarkets[, 1] # ts data
+decomposedRes <- decompose(tsData, type="mult") # use type = "additive" for additive components
+plot (decomposedRes,col = "blue" ) + 
+  abline(v = 1997, col = "red", lty = 1, lwd = 2) # see plot below
+stlRes <- stl(tsData, s.window = "periodic")
+```
+
+### Exploring and subseting the maxtemp ftom the fpp2 library. We are only interested in data from 1990, we eliminated previous data.The original dataset goes back to 1970.
+```{r, message=F, warning = F, echo=TRUE}
+data<- maxtemp
+maxtemp1990 <- window(data, start = 1990, end = 2016)
+maxtemp1990 
+```
+
+### SES model. Data plot
+
+```{r, message=F, warning = F, echo=TRUE}
+plot(maxtemp1990, ylab = "Max Temperature", xlab = "Year")
+fit1 = ses(maxtemp1990,initial = "simple",alpha = .2, h = 5)
+```
+
+
+### Fitted, predicted and forecasting plot
+```{r, message=F, warning = F, echo=TRUE}
+plot(maxtemp1990, ylab = "Max Temperature", xlab = "Year", type = "o", xlim = c(1990, 2021))
+lines(fitted(fit1), col = "blue", type = "o")
+lines(fit1$mean, col = "blue", type = "o")
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+fit1$model
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+plot(maxtemp1990, ylab = "Max Temperature", xlab = "Year", type = "o", xlim = c(1990, 2021))
+fit1h = holt(maxtemp1990, alpha = .8, beta = .2, damped = TRUE, initial = "optimal", h = 5)
+lines(fitted(fit1h), col = "blue", type= "o")
+lines(fit1h$mean,col = "darkgreen", type= "o")
+```
+
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+fit1h$model
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+mean(fit1$residuals)
+mean(fit1h$residuals)
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+
+```
+
+
+
+```{r, message=F, warning = F, echo=TRUE}
+
+```
+
+
+

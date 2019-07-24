@@ -239,8 +239,8 @@ head(brew) </code></pre>
 ## 5       5   Fort Point Beer Company San Francisco    CA
 ## 6       6     COAST Brewing Company    Charleston    SC</code></pre>
 </div>
-<div id="we-clean-the-data." class="section level3">
-<h3>We clean the data.</h3>
+<div id="we-clean-the-data-and-combined-the-two-dataset." class="section level3">
+<h3>We clean the data and combined the two dataset.</h3>
 <pre class="r"><code># changing from factor to char
 brew$State &lt;- as.character(brew$State)
 # changing to int
@@ -273,8 +273,8 @@ head(combined)</code></pre>
 ## 5  26                  Milk / Sweet Stout     16
 ## 6  19                   English Brown Ale     16</code></pre>
 </div>
-<div id="create-one-new-dataset-for-colorado-and-texas." class="section level3">
-<h3>Create one new dataset for Colorado and Texas.</h3>
+<div id="create-one-new-dataset-for-colorado-and-texas.-and-create-a-traning-set-and-a-test-set-only-for-texas." class="section level3">
+<h3>Create one new dataset for Colorado and Texas. And create a traning set and a test set only for Texas.</h3>
 <pre class="r"><code>na.omit(combined) %&gt;% filter(State %in% c(&quot;TX&quot;,&quot;CO&quot;))%&gt;% arrange(IBU) -&gt;beerCOTX
 head(beerCOTX)</code></pre>
 <pre><code>##   Brew_ID               Brewery_Name           City State
@@ -351,6 +351,9 @@ head(testTX)</code></pre>
 ## 6        Weisse Versa     464 0.052  15          Hefeweizen     12
 ## 10         LuckenBock    1972 0.070  18                Bock     16
 ## 13   Bombshell Blonde     856 0.050  20 American Blonde Ale     16</code></pre>
+</div>
+<div id="summary-of-the-train-and-test" class="section level3">
+<h3>Summary of the train and test</h3>
 <pre class="r"><code>summary(trainTX)</code></pre>
 <pre><code>##     Brew_ID      Brewery_Name                 City       State          
 ##  Min.   : 30.0   Length:53          Austin      : 9   Length:53         
@@ -642,8 +645,8 @@ caret::confusionMatrix(conf)</code></pre>
 <div id="model-2-predicting-style-in-base-of-abv-and-ibu." class="section level3">
 <h3>Model 2 predicting style in base of ABV and IBU.</h3>
 </div>
-<div id="this-to-model-are-very-similar.-there-is-not-difference-between-the-2-i-will-take-the-first-model-because-it-is-simpler." class="section level3">
-<h3>This to model are very similar. There is not difference between the 2, I will take the first model because it is simpler.</h3>
+<div id="this-two-model-are-very-similar.-there-is-not-difference-between-the-two-i-will-take-the-first-model-because-it-is-simpler." class="section level3">
+<h3>This two model are very similar. There is not difference between the two, I will take the first model because it is simpler.</h3>
 <pre class="r"><code>trainSTX$Style  &lt;- as.character(trainSTX$Style)
 testSTX$Style &lt;- as.character(testSTX$Style)
 results = class::knn(trainSTX[,c(7,8)], testSTX[,c(7,8)], trainSTX$Style, k = 5)
@@ -693,7 +696,7 @@ library(tidyverse)</code></pre>
 </div>
 <div id="nyt-api-and-get-data" class="section level3">
 <h3>NYT API and get data</h3>
-<pre class="r"><code>NYTIMES_KEY = &quot;OG89fUubcS8FXofVrLA4dmIOHh5omiFa&quot; #Your Key Here … get from NTY API website
+<pre class="r"><code>NYTIMES_KEY = &quot;ULAGIigdFMCFsmJgB5cxcwKmCjnISU6W&quot; #Your Key Here … get from NTY API website
 # Let's set some parameters
 term &lt;- &quot;Central+Park+Jogger&quot; # Need to use + to string together separate words
 begin_date &lt;- &quot;19890419&quot;
@@ -702,7 +705,7 @@ baseurl &lt;- paste0(&quot;http://api.nytimes.com/svc/search/v2/articlesearch.js
                   &quot;&amp;begin_date=&quot;,begin_date,&quot;&amp;end_date=&quot;,end_date,
                   &quot;&amp;facet_filter=true&amp;api-key=&quot;,NYTIMES_KEY, sep=&quot;&quot;)
 baseurl</code></pre>
-<pre><code>## [1] &quot;http://api.nytimes.com/svc/search/v2/articlesearch.json?q=Central+Park+Jogger&amp;begin_date=19890419&amp;end_date=19990419&amp;facet_filter=true&amp;api-key=OG89fUubcS8FXofVrLA4dmIOHh5omiFa&quot;</code></pre>
+<pre><code>## [1] &quot;http://api.nytimes.com/svc/search/v2/articlesearch.json?q=Central+Park+Jogger&amp;begin_date=19890419&amp;end_date=19990419&amp;facet_filter=true&amp;api-key=ULAGIigdFMCFsmJgB5cxcwKmCjnISU6W&quot;</code></pre>
 </div>
 <div id="put-the-data-together" class="section level3">
 <h3>Put the data together</h3>
@@ -821,26 +824,26 @@ importantWords = theText[!str_detect(theText,regex(wordsToTakeOut,ignore_case = 
 ## 
 ##        
 ##         News Other
-##   News   332   106
+##   News   329   109
 ##   Other   42     9
 ##                                           
-##                Accuracy : 0.6973          
-##                  95% CI : (0.6545, 0.7378)
-##     No Information Rate : 0.7648          
+##                Accuracy : 0.6912          
+##                  95% CI : (0.6482, 0.7319)
+##     No Information Rate : 0.7587          
 ##     P-Value [Acc &gt; NIR] : 0.9997          
 ##                                           
-##                   Kappa : -0.0422         
+##                   Kappa : -0.0458         
 ##                                           
-##  Mcnemar's Test P-Value : 2.236e-07       
+##  Mcnemar's Test P-Value : 7.83e-08        
 ##                                           
-##             Sensitivity : 0.88770         
-##             Specificity : 0.07826         
-##          Pos Pred Value : 0.75799         
+##             Sensitivity : 0.88679         
+##             Specificity : 0.07627         
+##          Pos Pred Value : 0.75114         
 ##          Neg Pred Value : 0.17647         
-##              Prevalence : 0.76483         
-##          Detection Rate : 0.67894         
+##              Prevalence : 0.75869         
+##          Detection Rate : 0.67280         
 ##    Detection Prevalence : 0.89571         
-##       Balanced Accuracy : 0.48298         
+##       Balanced Accuracy : 0.48153         
 ##                                           
 ##        'Positive' Class : News            
 ## </code></pre>
