@@ -20,8 +20,10 @@ library(reshape2)
 library(tidyverse)
 library(stringr)
 library(caret)
-library(fpp)
 library(fpp2)
+library(dygraphs)
+library(xts)
+library(pander)
 ```
 
 #### EuStockMarkets. Pull the DAX index
@@ -29,7 +31,7 @@ library(fpp2)
 ```{r, message=F, warning = F, echo=TRUE}
 tsData <- EuStockMarkets
 daxind <- tsData[,1]
-daxind
+head(daxind)
 
 ```
 
@@ -72,9 +74,14 @@ lines(fit1$mean, col = "blue", type = "o")
 ```
 
 
+### Statistics for the SES model. It will be compared to the holt model, please see below.
 
 ```{r, message=F, warning = F, echo=TRUE}
 fit1$model
+ASE <- accuracy(fitted(fit1), maxtemp1990)
+ASE
+ASEx<- ASE[,2]^2
+ASEx
 ```
 
 
@@ -88,29 +95,80 @@ lines(fit1h$mean,col = "darkgreen", type= "o")
 
 
 
-
+#### The RMES is lower in the SES model fit1, which look like better model than the fit1h which is the holt model. The RMES in the holt model is 2.991645, the RMES in the SES model is 1.18444. Therefore the SES model could perform better from that prospective.The ASE ( please see above code 83 and this code) is lower in the SES model (fit1) ASEhx= 5.412085 in comparison to fith1 (holt model) ASE1x = 8.949939. With this information, the SES model should perform better. 
 ```{r, message=F, warning = F, echo=TRUE}
 fit1h$model
+ASEh <- accuracy(fitted(fit1h), maxtemp1990)
+ASEh
+ASEhx <- ASEh[,2]^2
+ASEhx
 ```
 
 
+### In this code we showed that fit1h has les residual than the fit1 model so from that prospective fit1h model should perform better than fit1. So the holt model should perform better than the SES model. This is in contrary to the ASE and RMES measures that we got above. 
+```{r, message=F, warning = F, echo=TRUE}
+fit1e <- mean(fit1$residuals)
+fit1e
+fit1he <-mean(fit1h$residuals)
+fit1he
+```
+
+
+### Get the data.
 
 ```{r, message=F, warning = F, echo=TRUE}
-mean(fit1$residuals)
-mean(fit1h$residuals)
+Olli <- read.csv("Unit12TimeSeries_Ollivander.csv", header=FALSE)
+head(Olli)
+Grego <- read.csv("Unit12TimeSeries_Gregorovitch.csv", header=FALSE)
+head(Grego)
 ```
 
 
+### Converting Data time character to data time appropriate format.
 
 ```{r, message=F, warning = F, echo=TRUE}
-
+Olli$V1 <- as.Date(Olli$V1,"%m/%d/%Y")
+Olli$V1
+Grego$V1 <- as.Date(Grego$V1,"%m/%d/%Y")
+Olli$V1
 ```
 
 
+### Convert to Time Series Object.
 
 ```{r, message=F, warning = F, echo=TRUE}
-
+OlliTS <- xts(Olli$V2,order.by=Olli$V1)
+GregoTS <- xts(Grego$V2,order.by=Grego$V1)
+head(OlliTS)
+autoplot(GregoTS)
+head(GregoTS)
+autoplot(GregoTS)
 ```
+
+### WE combined the 2 times series
+
+```{r, message=F, warning = F, echo=TRUE}
+combined<- cbind(OlliTS, GregoTS)
+head(combined)
+```
+
+
+#### Plot the combined time series.
+
+```{r, message=F, warning = F, echo=TRUE}
+dygraph(combined,main="Wand Sales by Maker",xlab="Date",ylab="Sales") %>%
+  dySeries("OlliTS", label="Ollivander", col="blue") %>%
+  dySeries("GregoTS", label="Gregorovitch",col="orange") %>%
+  dyOptions(stackedGraph = TRUE)%>%
+  dyRangeSelector() %>%
+  dyShading(from="1995-01-01",to="1999-07-31") %>%
+  dyHighlight(highlightSeriesOpts = list(strokeWidth =3))%>% 
+  dyLegend(width=500)
+```
+
+
+
+
 
 
 
