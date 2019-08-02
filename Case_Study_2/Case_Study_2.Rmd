@@ -1,0 +1,29 @@
+---
+title: "Case Study 2"
+author: "Fabio"
+date: "8/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+```{r, echo= TRUE}
+dfdata<- readr::read_csv("CaseStudy2-data.csv")
+head(dfdata)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r, echo= TRUE}
+
+
+```
+
