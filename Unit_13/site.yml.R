@@ -1,0 +1,8 @@
+name: "my-website"
+navbar:
+  title: "My Website"
+left:
+  - text: ""
+href: 
+  - text: ""
+href:

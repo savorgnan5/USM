@@ -62,7 +62,7 @@ maxtemp1990
 
 ```{r, message=F, warning = F, echo=TRUE}
 plot(maxtemp1990, ylab = "Max Temperature", xlab = "Year")
-fit1 = ses(maxtemp1990,initial = "simple",alpha = .2, h = 5)
+fit1 = ses(maxtemp1990,initial = "optimal",alpha = .2, h = 5)
 ```
 
 
@@ -85,7 +85,7 @@ ASEx
 ```
 
 
-
+### The Holt model
 ```{r, message=F, warning = F, echo=TRUE}
 plot(maxtemp1990, ylab = "Max Temperature", xlab = "Year", type = "o", xlim = c(1990, 2021))
 fit1h = holt(maxtemp1990, alpha = .8, beta = .2, damped = TRUE, initial = "optimal", h = 5)
